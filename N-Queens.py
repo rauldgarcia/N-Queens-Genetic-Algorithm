@@ -17,7 +17,20 @@ def creamatriz ():
 
     return matriz
 
+def cuentanqueen (matriz):
+    total=0
+    for i in range(nqueen):
+        for j in range(nqueen):
+            if matriz[i][j]==1:
+                
+                renglon=matriz[i].tolist()
+                n=renglon.count(1)
+                total+=n-1
+    return total
+
 m1=creamatriz()
 m2=creamatriz()
 print(m1)
 print(m2)
+print(m1[1])
+print(cuentanqueen(m1))
