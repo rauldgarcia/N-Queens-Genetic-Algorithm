@@ -23,18 +23,17 @@ def cuentanqueen (matriz):
     for i in range(nqueen):
         for j in range(nqueen):
             if matriz[i][j]==1:
-                
                 renglon=matriz[i].tolist()
                 n=renglon.count(1)
                 total+=n-1
+
             if matrizt[i][j]==1:
-                
-                renglon=matriz[i].tolist()
+                renglon=matrizt[i].tolist()
                 n=renglon.count(1)
                 total+=n-1
+
     return total
 
 m1=creamatriz()
 print(m1)
-print(m1[1])
 print(cuentanqueen(m1))
