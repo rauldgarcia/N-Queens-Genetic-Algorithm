@@ -1,12 +1,13 @@
 import numpy as np
 from random import *
+import random
 
 nqueen=8 #se puede cambiar el numero de reinas (solo hay solución para n>=4)
-npoblacion=2
+npoblacion=4 #se puede cambiar el numero de poblacion
+npadres=int(npoblacion*0.5) #se puede cambiar el numero de padres
 
 #crea matrices aleatorias de n numeros de 1 
 def creamatriz ():
-
     matriz=np.zeros((nqueen,nqueen))
     i=0
     while i < nqueen:
@@ -15,7 +16,6 @@ def creamatriz ():
         if matriz[randomx][randomy]==0:
             matriz[randomx][randomy]=1
             i+=1
-
     return matriz
 
 def cuentanqueen (matriz):
@@ -31,6 +31,7 @@ def cuentanqueen (matriz):
     matrizflip=np.flip(matriz,axis=1) #flip a matriz
     sumadiagonalid=0
     sumadiagonaldi=0
+
     for i in range(-nqueen,nqueen,1): #suma diagonales
         diagonalid=np.trace(matriz,offset=i)
         diagonaldi=np.trace(matrizflip,offset=i)
@@ -42,13 +43,35 @@ def cuentanqueen (matriz):
     total=np.sum(sc)+np.sum(sr)+sumadiagonalid+sumadiagonaldi
     return total
 
+def flip(p):
+    n=random.random()
+    if n>p:
+        return 1
+    else:
+        return 0
+
 poblacion=[[i for i in range(3)]for j in range(npoblacion)] #crea matriz de largo de la poblacion
 for i in range(npoblacion): #crea la poblacion
     poblacion[i][0]=creamatriz()
     poblacion[i][1]=cuentanqueen(poblacion[i][0])
+    
 sumareinas=np.sum(poblacion,axis=0)[1] #suma el total de ataques de reinas
+print(sumareinas)
 for i in range(npoblacion): #calcula el porcentaje de ser padre
-    poblacion[i][2]=1-(poblacion[i][1]/sumareinas)
+    poblacion[i][2]=poblacion[i][1]/sumareinas
+
+poblacion.sort(key=lambda x:x[1]) #ordena la matriz de acuerdo a numero de ataques de menor a mayor
 print(poblacion)
-poblacion.sort(key=lambda x:x[1])
-print(poblacion)
+
+padres=[[i for i in range(3)]for j in range(npadres)] #crea una matriz de largo de los padres
+cont=0
+while cont<npadres: #seleccion de padres
+    for i in range(npoblacion):
+        if cont<npadres:
+            if flip(poblacion[i][2])==1:
+                padres[cont][0]=poblacion[i][0]
+                cont+=1
+        else:
+            break
+
+print(padres)
