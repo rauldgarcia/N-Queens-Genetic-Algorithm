@@ -43,7 +43,12 @@ def cuentanqueen (matriz):
     return total
 
 poblacion=[[i for i in range(3)]for j in range(npoblacion)] #crea matriz de largo de la poblacion
-for i in range(npoblacion):
+for i in range(npoblacion): #crea la poblacion
     poblacion[i][0]=creamatriz()
     poblacion[i][1]=cuentanqueen(poblacion[i][0])
+sumareinas=np.sum(poblacion,axis=0)[1] #suma el total de ataques de reinas
+for i in range(npoblacion): #calcula el porcentaje de ser padre
+    poblacion[i][2]=1-(poblacion[i][1]/sumareinas)
+print(poblacion)
+poblacion.sort(key=lambda x:x[1])
 print(poblacion)
