@@ -2,6 +2,7 @@ import numpy as np
 from random import *
 
 nqueen=8 #se puede cambiar el numero de reinas (solo hay solución para n>=4)
+npoblacion=2
 
 #crea matrices aleatorias de n numeros de 1 
 def creamatriz ():
@@ -27,7 +28,7 @@ def cuentanqueen (matriz):
         if sr[i]==1:
             sr[i]=0
 
-    matrizflip=np.flip(m1,axis=1) #flip a matriz
+    matrizflip=np.flip(matriz,axis=1) #flip a matriz
     sumadiagonalid=0
     sumadiagonaldi=0
     for i in range(-nqueen,nqueen,1): #suma diagonales
@@ -41,6 +42,8 @@ def cuentanqueen (matriz):
     total=np.sum(sc)+np.sum(sr)+sumadiagonalid+sumadiagonaldi
     return total
 
-m1=creamatriz()
-print(m1)
-print(cuentanqueen(m1))
+poblacion=[[i for i in range(3)]for j in range(npoblacion)] #crea matriz de largo de la poblacion
+for i in range(npoblacion):
+    poblacion[i][0]=creamatriz()
+    poblacion[i][1]=cuentanqueen(poblacion[i][0])
+print(poblacion)
