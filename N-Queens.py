@@ -1,7 +1,7 @@
 import numpy as np
 from random import *
 
-nqueen=4 #se puede cambiar el numero de reinas (solo hay solución para n>=4)
+nqueen=8 #se puede cambiar el numero de reinas (solo hay solución para n>=4)
 
 #crea matrices aleatorias de n numeros de 1 
 def creamatriz ():
@@ -18,20 +18,27 @@ def creamatriz ():
     return matriz
 
 def cuentanqueen (matriz):
-    total=0
-    matrizt=np.transpose(matriz)
-    for i in range(nqueen):
-        for j in range(nqueen):
-            if matriz[i][j]==1:
-                renglon=matriz[i].tolist()
-                n=renglon.count(1)
-                total+=n-1
+    sr=np.sum(matriz, axis=1) #suma renglon
+    sc=np.sum(matriz, axis=0) #suma columna
 
-            if matrizt[i][j]==1:
-                renglon=matrizt[i].tolist()
-                n=renglon.count(1)
-                total+=n-1
+    for i in range(nqueen): #si en columna o renglon solo hay uno lo vuelve 0
+        if sc[i]==1:
+            sc[i]=0
+        if sr[i]==1:
+            sr[i]=0
 
+    matrizflip=np.flip(m1,axis=1) #flip a matriz
+    sumadiagonalid=0
+    sumadiagonaldi=0
+    for i in range(-nqueen,nqueen,1): #suma diagonales
+        diagonalid=np.trace(matriz,offset=i)
+        diagonaldi=np.trace(matrizflip,offset=i)
+        if diagonalid>1:
+            sumadiagonalid+=diagonalid
+        if diagonaldi>1:
+            sumadiagonaldi+=diagonaldi
+
+    total=np.sum(sc)+np.sum(sr)+sumadiagonalid+sumadiagonaldi
     return total
 
 m1=creamatriz()
