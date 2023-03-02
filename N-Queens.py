@@ -3,8 +3,10 @@ from random import *
 import random
 
 nqueen=8 #se puede cambiar el numero de reinas (solo hay solución para n>=4)
-npoblacion=4 #se puede cambiar el numero de poblacion
-npadres=int(npoblacion*0.5) #se puede cambiar el numero de padres
+npoblacion=10 #se puede cambiar el numero de poblacion
+npadres=int(npoblacion*0.2) #se puede cambiar el numero de padres
+pcruza=0.5 #se puede cambiar porcentaje de cruza
+pmuta=0.5 #se puede cambiar
 
 #crea matrices aleatorias de n numeros de 1 
 def creamatriz ():
@@ -50,6 +52,26 @@ def flip(p):
     else:
         return 0
 
+def cruza(m1,m2):
+    p=flip(pcruza) #volado si se cruzan o no
+    if p==1:
+        matriz=[[m1[0][0],m2[0][1],m2[0][2],m2[0][3],m2[0][4],m2[0][5],m2[0][6],m2[0][7]],
+                [m1[1][0],m1[1][1],m2[1][2],m2[1][3],m2[1][4],m2[1][5],m2[1][6],m2[1][7]],
+                [m1[2][0],m1[2][1],m1[2][2],m2[2][3],m2[2][4],m2[2][5],m2[2][6],m2[2][7]],
+                [m1[3][0],m1[3][1],m1[3][2],m1[3][3],m2[3][4],m2[3][5],m2[3][6],m2[3][7]],
+                [m1[4][0],m1[4][1],m1[4][2],m1[4][3],m2[4][4],m2[4][5],m2[4][6],m2[4][7]],
+                [m1[5][0],m1[5][1],m1[5][2],m1[5][3],m1[5][4],m2[5][5],m2[5][6],m2[5][7]],
+                [m1[6][0],m1[6][1],m1[6][2],m1[6][3],m1[6][4],m1[6][5],m2[6][6],m2[6][7]],
+                [m1[7][0],m1[7][1],m1[7][2],m1[7][3],m1[7][4],m1[7][5],m1[7][6],m2[7][7]]]
+        matriz=np.array(matriz)
+    else: #si no se cruzan random para escoger matriz
+        rand=random.randint(0, 1)
+        if rand==1:
+            matriz=m1
+        else:
+            matriz=m2
+    return matriz
+
 poblacion=[[i for i in range(3)]for j in range(npoblacion)] #crea matriz de largo de la poblacion
 for i in range(npoblacion): #crea la poblacion
     poblacion[i][0]=creamatriz()
@@ -57,11 +79,9 @@ for i in range(npoblacion): #crea la poblacion
     
 sumareinas=np.sum(poblacion,axis=0)[1] #suma el total de ataques de reinas
 print(sumareinas)
-for i in range(npoblacion): #calcula el porcentaje de ser padre
-    poblacion[i][2]=poblacion[i][1]/sumareinas
 
-poblacion.sort(key=lambda x:x[1]) #ordena la matriz de acuerdo a numero de ataques de menor a mayor
-print(poblacion)
+for i in range(npoblacion): #calcula el porcentaje de ser padre
+    poblacion[i][2]=1-(poblacion[i][1]/(sumareinas))
 
 padres=[[i for i in range(3)]for j in range(npadres)] #crea una matriz de largo de los padres
 cont=0
@@ -74,4 +94,14 @@ while cont<npadres: #seleccion de padres
         else:
             break
 
+
+
 print(padres)
+
+prueba=cruza(padres[0][0],padres[1][0])
+print(prueba)
+print(cuentanqueen(prueba))
+
+#poner esto despues de muta y append de hijos y poblacion
+poblacion.sort(key=lambda x:x[1]) #ordena la matriz de acuerdo a numero de ataques de menor a mayor
+print(poblacion)
