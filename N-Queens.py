@@ -3,7 +3,7 @@ from random import *
 import random
 
 nqueen=8 #se puede cambiar el numero de reinas (solo hay solución para n>=4)
-npoblacion=10 #se puede cambiar el numero de poblacion
+npoblacion=20 #se puede cambiar el numero de poblacion
 npadres=int(npoblacion*0.2) #se puede cambiar el numero de padres
 pcruza=0.5 #se puede cambiar porcentaje de cruza
 pmuta=0.5 #se puede cambiar
@@ -52,6 +52,19 @@ def flip(p):
     else:
         return 0
 
+def selpadres():
+    spadres=[[k for k in range(3)]for l in range(npadres)] #crea una matriz de largo de los padres
+    cont=0
+    while cont<npadres: #seleccion de padres
+        for i in range(npoblacion):
+            if cont<npadres:
+                if flip(poblacion[i][2])==1:
+                    spadres[cont][0]=poblacion[i][0]
+                    cont+=1
+            else:
+                break   
+    return spadres
+
 def cruza(m1,m2):
     p=flip(pcruza) #volado si se cruzan o no
     if p==1:
@@ -64,6 +77,8 @@ def cruza(m1,m2):
                 [m1[6][0],m1[6][1],m1[6][2],m1[6][3],m1[6][4],m1[6][5],m2[6][6],m2[6][7]],
                 [m1[7][0],m1[7][1],m1[7][2],m1[7][3],m1[7][4],m1[7][5],m1[7][6],m2[7][7]]]
         matriz=np.array(matriz)
+
+
     else: #si no se cruzan random para escoger matriz
         rand=random.randint(0, 1)
         if rand==1:
@@ -83,25 +98,19 @@ print(sumareinas)
 for i in range(npoblacion): #calcula el porcentaje de ser padre
     poblacion[i][2]=1-(poblacion[i][1]/(sumareinas))
 
-padres=[[i for i in range(3)]for j in range(npadres)] #crea una matriz de largo de los padres
-cont=0
-while cont<npadres: #seleccion de padres
-    for i in range(npoblacion):
-        if cont<npadres:
-            if flip(poblacion[i][2])==1:
-                padres[cont][0]=poblacion[i][0]
-                cont+=1
-        else:
-            break
-
-
-
+padres=selpadres() #selecciona a los padres
 print(padres)
 
-prueba=cruza(padres[0][0],padres[1][0])
-print(prueba)
-print(cuentanqueen(prueba))
+hijos=[[i for i in range(3)]for j in range(int(npadres/2))] #crea a los hijos
+conta=0
+for i in range(0,npadres,2):
+    p1=padres[i][0]
+    p2=padres[i+1][0]
+    hijos[0][conta]=cruza(p1,p2)
+    conta+=1
+
+print(hijos)
 
 #poner esto despues de muta y append de hijos y poblacion
 poblacion.sort(key=lambda x:x[1]) #ordena la matriz de acuerdo a numero de ataques de menor a mayor
-print(poblacion)
+#print(poblacion)
