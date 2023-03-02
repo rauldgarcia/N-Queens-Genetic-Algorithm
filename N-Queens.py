@@ -5,7 +5,7 @@ import random
 nqueen=8 #se puede cambiar el numero de reinas (solo hay solución para n>=4)
 npoblacion=20 #se puede cambiar el numero de poblacion
 npadres=int(npoblacion*0.2) #se puede cambiar el numero de padres
-pcruza=0.5 #se puede cambiar porcentaje de cruza
+pcruza=0.7 #se puede cambiar porcentaje de cruza
 pmuta=0.5 #se puede cambiar
 
 #crea matrices aleatorias de n numeros de 1 
@@ -77,8 +77,24 @@ def cruza(m1,m2):
                 [m1[6][0],m1[6][1],m1[6][2],m1[6][3],m1[6][4],m1[6][5],m2[6][6],m2[6][7]],
                 [m1[7][0],m1[7][1],m1[7][2],m1[7][3],m1[7][4],m1[7][5],m1[7][6],m2[7][7]]]
         matriz=np.array(matriz)
-
-
+        print(matriz)
+        suma=np.sum(matriz, axis=0) #suma columna
+        print(suma)
+        total=np.sum(suma)
+        print(total)
+        while total>nqueen:
+            randomx=randint(0,nqueen-1)
+            randomy=randint(0,nqueen-1)
+            if matriz[randomx][randomy]==1:
+                matriz[randomx][randomy]=0
+                total-=1
+        while total<nqueen:
+            randomx=randint(0,nqueen-1)
+            randomy=randint(0,nqueen-1)
+            if matriz[randomx][randomy]==0:
+                matriz[randomx][randomy]=1
+                total+=1        
+        print(total)
     else: #si no se cruzan random para escoger matriz
         rand=random.randint(0, 1)
         if rand==1:
