@@ -134,7 +134,6 @@ for i in range(npoblacion): #calcula el porcentaje de ser padre
     poblacion[i][2]=1-(poblacion[i][1]/(sumareinas))
 
 padres=selpadres() #selecciona a los padres
-print(padres)
 
 hijos=[[i for i in range(3)]for j in range(int(npadres/2))] #crea a los hijos
 conta=0
@@ -148,13 +147,6 @@ for i in range(int(npadres/2)): #se mutan los hijos
     hijos[i][0]=mutar(hijos[i][0])
     hijos[i][1]=cuentanqueen(hijos[i][0])
 
-print(hijos)
-
-print(len(poblacion))
-print(len(hijos))
-poblacion.extend(hijos)
-print(len(poblacion))
-
-#poner esto despues de muta y append de hijos y poblacion
+poblacion.extend(hijos) #pega los hijos a la poblacion
 poblacion.sort(key=lambda x:x[1]) #ordena la matriz de acuerdo a numero de ataques de menor a mayor
-#print(poblacion)
+del poblacion[npoblacion:] #borra los peores y se queda con tamaño de poblacion igual
