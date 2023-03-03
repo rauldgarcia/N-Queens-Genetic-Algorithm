@@ -1,12 +1,15 @@
 import numpy as np
 from random import *
 import random
+import time
+inicio=time.time()
 
 nqueen=8 #se puede cambiar el numero de reinas (solo hay solución para n>=4)
-npoblacion=20 #se puede cambiar el numero de poblacion
+npoblacion=100 #se puede cambiar el numero de poblacion
 npadres=int(npoblacion*0.2) #se puede cambiar el numero de padres
 pcruza=0.7 #se puede cambiar porcentaje de cruza
 pmuta=0.7 #se puede cambiar
+iteraciones=2000
 
 #crea matrices aleatorias de n numeros de 1 
 def creamatriz ():
@@ -34,7 +37,7 @@ def cuentanqueen (matriz):
     sumadiagonalid=0
     sumadiagonaldi=0
 
-    for i in range(-nqueen,nqueen,1): #suma diagonales
+    for i in range(-nqueen+1,nqueen,1): #suma diagonales
         diagonalid=np.trace(matriz,offset=i)
         diagonaldi=np.trace(matrizflip,offset=i)
         if diagonalid>1:
@@ -126,27 +129,62 @@ poblacion=[[i for i in range(3)]for j in range(npoblacion)] #crea matriz de larg
 for i in range(npoblacion): #crea la poblacion
     poblacion[i][0]=creamatriz()
     poblacion[i][1]=cuentanqueen(poblacion[i][0])
-    
-sumareinas=np.sum(poblacion,axis=0)[1] #suma el total de ataques de reinas
-print(sumareinas)
 
-for i in range(npoblacion): #calcula el porcentaje de ser padre
-    poblacion[i][2]=1-(poblacion[i][1]/(sumareinas))
-
-padres=selpadres() #selecciona a los padres
-
-hijos=[[i for i in range(3)]for j in range(int(npadres/2))] #crea a los hijos
-conta=0
-for i in range(0,npadres,2):
-    p1=padres[i][0]
-    p2=padres[i+1][0]
-    hijos[conta][0]=cruza(p1,p2)
-    conta+=1
-
-for i in range(int(npadres/2)): #se mutan los hijos
-    hijos[i][0]=mutar(hijos[i][0])
-    hijos[i][1]=cuentanqueen(hijos[i][0])
-
-poblacion.extend(hijos) #pega los hijos a la poblacion
 poblacion.sort(key=lambda x:x[1]) #ordena la matriz de acuerdo a numero de ataques de menor a mayor
-del poblacion[npoblacion:] #borra los peores y se queda con tamaño de poblacion igual
+mejor=poblacion[0][0]
+mejorscore=poblacion[0][1]
+print("El mejor tablero es:")
+print(mejor)
+print("Tiene el siguiente numero de ataques:")
+print(mejorscore)
+
+contador=0
+while mejorscore>0 and contador<iteraciones:
+    contador+=1
+
+    #for i in range(npoblacion):
+    #    poblacion[i][1]=cuentanqueen(poblacion[i][0])
+
+    sumareinas=np.sum(poblacion,axis=0)[1] #suma el total de ataques de reinas
+    promata=sumareinas/npoblacion
+
+    for j in range(npoblacion): #calcula el porcentaje de ser padre
+        poblacion[j][2]=(1-(poblacion[j][1]/(sumareinas)))/(promata)
+
+    padres=selpadres() #selecciona a los padres
+
+    hijos=[[i for i in range(3)]for j in range(int(npadres/2))] #crea a los hijos
+    conta=0
+    for i in range(0,npadres,2):
+        p1=padres[i][0]
+        p2=padres[i+1][0]
+        hijos[conta][0]=cruza(p1,p2)
+        conta+=1
+
+    for l in range(int(npadres/2)): 
+        hijos[l][0]=mutar(hijos[l][0]) #se mutan los hijos
+
+    for x in range(int(npadres/2)):
+        hijos[x][1]=cuentanqueen(hijos[x][0]) #se evaluan
+
+    poblacion.extend(hijos) #pega los hijos a la poblacion
+    for i in range(npoblacion+(int(npadres/2))):
+        poblacion[i][1]=cuentanqueen(poblacion[i][0])
+
+    poblacion.sort(key=lambda x:x[1]) #ordena la matriz de acuerdo a numero de ataques de menor a mayor
+    del poblacion[npoblacion:] #borra los peores y se queda con tamaño de poblacion igual
+    
+    mejor=poblacion[0][0]
+    mejorscore=poblacion[0][1]
+    print("Iteración número:")
+    print(contador)
+    print("Número total de ataques:")
+    print(sumareinas)
+    print("El mejor tablero es:")
+    print(mejor)
+    print("Tiene el siguiente numero de ataques:")
+    print(mejorscore)
+
+fin=time.time()
+print("El tiempo de ejecución fue:")
+print(fin-inicio)
