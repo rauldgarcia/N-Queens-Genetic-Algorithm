@@ -6,7 +6,7 @@ nqueen=8 #se puede cambiar el numero de reinas (solo hay solución para n>=4)
 npoblacion=20 #se puede cambiar el numero de poblacion
 npadres=int(npoblacion*0.2) #se puede cambiar el numero de padres
 pcruza=0.7 #se puede cambiar porcentaje de cruza
-pmuta=0.5 #se puede cambiar
+pmuta=0.7 #se puede cambiar
 
 #crea matrices aleatorias de n numeros de 1 
 def creamatriz ():
@@ -76,31 +76,50 @@ def cruza(m1,m2):
                 [m1[5][0],m1[5][1],m1[5][2],m1[5][3],m1[5][4],m2[5][5],m2[5][6],m2[5][7]],
                 [m1[6][0],m1[6][1],m1[6][2],m1[6][3],m1[6][4],m1[6][5],m2[6][6],m2[6][7]],
                 [m1[7][0],m1[7][1],m1[7][2],m1[7][3],m1[7][4],m1[7][5],m1[7][6],m2[7][7]]]
+        
         matriz=np.array(matriz)
-        print(matriz)
         suma=np.sum(matriz, axis=0) #suma columna
-        print(suma)
-        total=np.sum(suma)
-        print(total)
-        while total>nqueen:
+        total=np.sum(suma) #suma total
+
+        while total>nqueen: #repara si hay mas reinas
             randomx=randint(0,nqueen-1)
             randomy=randint(0,nqueen-1)
             if matriz[randomx][randomy]==1:
                 matriz[randomx][randomy]=0
                 total-=1
-        while total<nqueen:
+        
+        while total<nqueen: #repara si hay menos reinas
             randomx=randint(0,nqueen-1)
             randomy=randint(0,nqueen-1)
             if matriz[randomx][randomy]==0:
                 matriz[randomx][randomy]=1
                 total+=1        
-        print(total)
+        
     else: #si no se cruzan random para escoger matriz
         rand=random.randint(0, 1)
         if rand==1:
             matriz=m1
         else:
             matriz=m2
+    return matriz
+
+def mutar(matriz):
+    p=flip(pmuta) #volado si se muta o no
+    if p==1:
+        cambio=0
+        while cambio==0: #quita un 1 random
+            randomx=randint(0,nqueen-1)
+            randomy=randint(0,nqueen-1)
+            if matriz[randomx][randomy]==1:
+                matriz[randomx][randomy]=0
+                cambio=1
+            
+        while cambio==1: #agrega un 1 random
+            randomj=randint(0,nqueen-1)
+            randomk=randint(0,nqueen-1)
+            if matriz[randomj][randomk]==0:
+                matriz[randomj][randomk]=1
+                cambio=0
     return matriz
 
 poblacion=[[i for i in range(3)]for j in range(npoblacion)] #crea matriz de largo de la poblacion
@@ -122,10 +141,19 @@ conta=0
 for i in range(0,npadres,2):
     p1=padres[i][0]
     p2=padres[i+1][0]
-    hijos[0][conta]=cruza(p1,p2)
+    hijos[conta][0]=cruza(p1,p2)
     conta+=1
 
+for i in range(int(npadres/2)): #se mutan los hijos
+    hijos[i][0]=mutar(hijos[i][0])
+    hijos[i][1]=cuentanqueen(hijos[i][0])
+
 print(hijos)
+
+print(len(poblacion))
+print(len(hijos))
+poblacion.extend(hijos)
+print(len(poblacion))
 
 #poner esto despues de muta y append de hijos y poblacion
 poblacion.sort(key=lambda x:x[1]) #ordena la matriz de acuerdo a numero de ataques de menor a mayor
