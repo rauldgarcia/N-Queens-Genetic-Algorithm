@@ -15,7 +15,7 @@ iteraciones=2000
 def creaperm():
     return np.random.permutation(8)
 
-def cuentanqueen (perm):
+def cuentanqueen(perm):
 
     matriz=np.zeros((nqueen,nqueen))
     for i in range(nqueen):
@@ -43,7 +43,21 @@ def pmatriz(perm):
 
     return matriz
 
+def flip(p):
+    n=random.random()
+    if n>p:
+        return 1
+    else:
+        return 0
+
 prueba=creaperm()
 print(prueba)
 print(cuentanqueen(prueba))
 print(pmatriz(prueba))
+
+poblacion=[[i for i in range(3)]for j in range(npoblacion)] #crea matriz de largo de la poblacion
+for i in range(npoblacion): #crea la poblacion
+    poblacion[i][0]=creaperm()
+    poblacion[i][1]=cuentanqueen(poblacion[i][0])
+
+print(poblacion)
