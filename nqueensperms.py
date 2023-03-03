@@ -6,7 +6,8 @@ inicio=time.time()
 
 nqueen=8 #se puede cambiar el numero de reinas (solo hay solución para n>=4)
 npoblacion=100 #se puede cambiar el numero de poblacion
-npadres=int(npoblacion*0.2) #se puede cambiar el numero de padres
+npadres=5 #se puede cambiar el numero de padres
+npadresreal=2
 pcruza=0.7 #se puede cambiar porcentaje de cruza
 pmuta=0.7 #se puede cambiar
 iteraciones=2000
@@ -50,14 +51,23 @@ def flip(p):
     else:
         return 0
 
-prueba=creaperm()
-print(prueba)
-print(cuentanqueen(prueba))
-print(pmatriz(prueba))
+def selpadres():
+    spadres=[[k for k in range(2)]for l in range(npadres)] #crea una matriz de largo de los padres
+    for i in range(npadres): #seleccion de padres
+        numrandom=randint(0,npoblacion-1)
+        spadres[i][0]=poblacion[numrandom][0] 
+        spadres[i][1]=poblacion[numrandom][1]
 
-poblacion=[[i for i in range(3)]for j in range(npoblacion)] #crea matriz de largo de la poblacion
+    spadres.sort(key=lambda x:x[1]) #ordena la matriz de acuerdo a numero de ataques de menor a mayor
+    del spadres[npadresreal:] #borra los peores y se queda con tamaño de poblacion igual
+    return spadres
+
+poblacion=[[i for i in range(2)]for j in range(npoblacion)] #crea matriz de largo de la poblacion
+
 for i in range(npoblacion): #crea la poblacion
     poblacion[i][0]=creaperm()
     poblacion[i][1]=cuentanqueen(poblacion[i][0])
 
 print(poblacion)
+padres=selpadres()
+print(padres)
