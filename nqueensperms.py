@@ -71,36 +71,39 @@ def cruza(padres):
     h1=p1[0:corte]
     h2=p2[0:corte]
 
+    for i in p2[corte:]:
+        if i not in h1:
+            h1=np.append(h1,i)
+        else:
+            h1=np.append(h1,8)
+
+    for i in p1[corte:]:
+        if i not in h2:
+            h2=np.append(h2,i)
+        else:
+            h2=np.append(h2,8)
+
     #reparación
     aleat=np.random.permutation(8)
     aleat1=np.random.permutation(8)
     for i in aleat:
         if i not in h1:
-            h1=np.append(h1,i)
+            list1=h1.tolist()
+            indice=list1.index(8)
+            h1[indice]=i
     for i in aleat1:
         if i not in h2:
-            h2=np.append(h2,i)
+            list2=h2.tolist()
+            indice=list2.index(8)
+            h2[indice]=i
 
     shijos[0][0]=h1
     shijos[1][0]=h2
     return shijos
 
-poblacion=[[i for i in range(2)]for j in range(npoblacion)] #crea matriz de largo de la poblacion
-
-for i in range(npoblacion): #crea la poblacion
-    poblacion[i][0]=creaperm()
-    poblacion[i][1]=cuentanqueen(poblacion[i][0])
-
-print(poblacion)
-padres=selpadres() #se seleccionan padres
-print(padres)
-hijos=cruza(padres) #se obtienen hijos
-print(hijos)
-
 def muta(x):
     p=flip(pmuta) #volado si se muta o no
     if p==1:
-        print("yes")
         h1=x[0][0]
         h2=x[1][0]
         aleat1=randint(0,nqueen-1)
@@ -119,5 +122,45 @@ def muta(x):
         x[1][0]=h2
     return x
 
-hijos=muta(hijos)
-print(hijos)
+poblacion=[[i for i in range(2)]for j in range(npoblacion)] #crea matriz de largo de la poblacion
+evaluaciones=0
+
+for i in range(npoblacion): #crea la poblacion
+    poblacion[i][0]=creaperm()
+    poblacion[i][1]=cuentanqueen(poblacion[i][0])
+    evaluaciones+=1
+
+mejor=poblacion[0][0]
+mejorscore=poblacion[0][1]
+print("El número de evaluciones es:")
+print(evaluaciones)
+print("El mejor tablero es:")
+print(pmatriz(mejor))
+print("Tiene el siguiente numero de ataques:")
+print(mejorscore)
+
+while mejorscore>0 and evaluaciones<10000:
+    padres=selpadres() #se seleccionan padres
+    hijos=cruza(padres) #se obtienen hijos
+    hijos=muta(hijos) #se mutan hijos
+
+    for i in range(npadresreal): #se evaluan hijos
+        hijos[i][1]=cuentanqueen(hijos[i][0])
+        evaluaciones+=1
+
+    poblacion.extend(hijos) #pega los hijos a la poblacion
+    poblacion.sort(key=lambda x:x[1]) #ordena la matriz de acuerdo a numero de ataques de menor a mayor
+    del poblacion[npoblacion:] #borra los peores y se queda con tamaño de poblacion igual
+
+    mejor=poblacion[0][0]
+    mejorscore=poblacion[0][1]
+    print("El número de evaluciones es:")
+    print(evaluaciones)
+    print("El mejor tablero es:")
+    print(pmatriz(mejor))
+    print("Tiene el siguiente numero de ataques:")
+    print(mejorscore)
+
+fin=time.time()
+print("El tiempo de ejecución fue:")
+print(fin-inicio)
