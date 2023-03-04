@@ -62,6 +62,29 @@ def selpadres():
     del spadres[npadresreal:] #borra los peores y se queda con tamaño de poblacion igual
     return spadres
 
+def cruza(padres):
+    shijos=[[k for k in range(2)]for l in range(2)] #crea una matriz de largo de los hijos
+    corte=randint(1,nqueen-2)
+
+    p1=padres[0][0]
+    p2=padres[1][0]
+    h1=p1[0:corte]
+    h2=p2[0:corte]
+
+    #reparación
+    aleat=np.random.permutation(8)
+    aleat1=np.random.permutation(8)
+    for i in aleat:
+        if i not in h1:
+            h1=np.append(h1,i)
+    for i in aleat1:
+        if i not in h2:
+            h2=np.append(h2,i)
+
+    shijos[0][0]=h1
+    shijos[1][0]=h2
+    return shijos
+
 poblacion=[[i for i in range(2)]for j in range(npoblacion)] #crea matriz de largo de la poblacion
 
 for i in range(npoblacion): #crea la poblacion
@@ -71,3 +94,5 @@ for i in range(npoblacion): #crea la poblacion
 print(poblacion)
 padres=selpadres()
 print(padres)
+hijos=cruza(padres)
+print(hijos)
