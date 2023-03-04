@@ -8,8 +8,8 @@ nqueen=8 #se puede cambiar el numero de reinas (solo hay solución para n>=4)
 npoblacion=100 #se puede cambiar el numero de poblacion
 npadres=5 #se puede cambiar el numero de padres
 npadresreal=2
-pcruza=0.7 #se puede cambiar porcentaje de cruza
-pmuta=0.7 #se puede cambiar
+pcruza=1 #se puede cambiar porcentaje de cruza
+pmuta=0.8 #se puede cambiar
 iteraciones=2000
 
 #crea matrices aleatorias de n numeros de 1 
@@ -92,7 +92,32 @@ for i in range(npoblacion): #crea la poblacion
     poblacion[i][1]=cuentanqueen(poblacion[i][0])
 
 print(poblacion)
-padres=selpadres()
+padres=selpadres() #se seleccionan padres
 print(padres)
-hijos=cruza(padres)
+hijos=cruza(padres) #se obtienen hijos
+print(hijos)
+
+def muta(x):
+    p=flip(pmuta) #volado si se muta o no
+    if p==1:
+        print("yes")
+        h1=x[0][0]
+        h2=x[1][0]
+        aleat1=randint(0,nqueen-1)
+        aleat2=randint(0,nqueen-1)
+        aleat3=randint(0,nqueen-1)
+        aleat4=randint(0,nqueen-1)
+        c1=h1[aleat1]
+        c2=h1[aleat2]
+        c3=h2[aleat3]
+        c4=h2[aleat4]
+        h1[aleat1]=c2
+        h1[aleat2]=c1
+        h2[aleat3]=c4
+        h2[aleat4]=c3
+        x[0][0]=h1
+        x[1][0]=h2
+    return x
+
+hijos=muta(hijos)
 print(hijos)
