@@ -139,6 +139,8 @@ print(pmatriz(mejor))
 print("Tiene el siguiente numero de ataques:")
 print(mejorscore)
 
+vectorevaluaciones=np.array([[evaluaciones,mejorscore]])
+
 while mejorscore>0 and evaluaciones<10000:
     padres=selpadres() #se seleccionan padres
     hijos=cruza(padres) #se obtienen hijos
@@ -160,7 +162,12 @@ while mejorscore>0 and evaluaciones<10000:
     print(pmatriz(mejor))
     print("Tiene el siguiente numero de ataques:")
     print(mejorscore)
+    vectorevaluacionesac=np.array([[evaluaciones,mejorscore]])
+    vectorevaluaciones=np.append(vectorevaluaciones,vectorevaluacionesac,axis=0)
 
 fin=time.time()
 print("El tiempo de ejecución fue:")
 print(fin-inicio)
+print(vectorevaluaciones)
+
+np.savetxt("nqueensperms1.csv",vectorevaluaciones,delimiter=",")
