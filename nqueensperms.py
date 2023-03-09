@@ -46,7 +46,7 @@ def pmatriz(perm):
 
 def flip(p):
     n=random.random()
-    if n>p:
+    if n<p:
         return 1
     else:
         return 0
