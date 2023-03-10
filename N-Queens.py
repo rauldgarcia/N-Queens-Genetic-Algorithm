@@ -8,8 +8,8 @@ inicio=time.time()
 nqueen=8 #se puede cambiar el numero de reinas (solo hay solución para n>=4)
 npoblacion=100 #se puede cambiar el numero de poblacion
 npadres=20 #se puede cambiar el numero de padres
-pcruza=0.8 #se puede cambiar porcentaje de cruza
-pmuta=0.8 #se puede cambiar
+pcruza=0.9 #se puede cambiar porcentaje de cruza
+pmuta=1 #se puede cambiar
 iteraciones=10000
 
 def creamatriz (): #crea matrices aleatorias de n numeros de 1 
@@ -62,8 +62,8 @@ def selpadres():
     while cont<npadres: #seleccion de padres
         for i in range(npoblacion):
             if cont<npadres:
-                if flip(poblacionn[i][2])==1:
-                    spadres[cont][0]=poblacionn[i][0]
+                if flip(poblacion[i][2])==1:
+                    spadres[cont][0]=poblacion[i][0]
                     cont+=1
             else:
                 break
@@ -151,6 +151,8 @@ print(mejor)
 print("Tiene el siguiente numero de ataques:")
 print(mejorscore)
 
+vectorevaluaciones=np.array([[evaluacion,mejorscore]])
+
 while mejorscore>0 and evaluacion<iteraciones:
     
     sumareinas=0
@@ -158,16 +160,16 @@ while mejorscore>0 and evaluacion<iteraciones:
         sumareinas+=poblacion[i][1]
     
     promata=sumareinas/npoblacion
-    poblacionn=poblacion
+
     for j in range(npoblacion): #calcula el porcentaje de ser padre
-        poblacionn[j][2]=1-(poblacionn[j][1]/(promata+0.1)) #al casi converger a 0 toda la poblacion tiene ataques==promedio
+        poblacion[j][2]=1-(poblacion[j][1]/(promata+0.1)) #al casi converger a 0 toda la poblacion tiene ataques==promedio
     
     
     padres=selpadres() #selecciona a los padres
     
     hijos=cruza(padres)#se cruzan padres
 
-    prueba=copy.deepcopy(poblacion)
+    copia=copy.deepcopy(poblacion) #se copia poblacion
     
     hijosmu=mutacion(hijos)#se mutan hijos
 
@@ -176,26 +178,26 @@ while mejorscore>0 and evaluacion<iteraciones:
         evaluacion+=1
     
     hijosmu.sort(key=lambda x:x[1]) #ordena la lista de acuerdo a numero de ataques de menor a mayor
-    poblacion=prueba   
+    poblacion=copia   
     poblacion.extend(hijosmu) #pega los hijos a la poblacion
     
-    #print(poblacion)
     poblacion.sort(key=lambda x:x[1]) #ordena la lista de acuerdo a numero de ataques de menor a mayor
     del poblacion[npoblacion:] #borra los peores y se queda con tamaño de poblacion igual
-    #print(poblacion)
 
     if poblacion[0][1]<mejorscore:
         mejor=copy.deepcopy(poblacion[0][0])
         mejorscore=copy.deepcopy(poblacion[0][1])
 
-    print("Iteración número:")
+    print("Evaluación número:")
     print(evaluacion)
     print("El mejor tablero es:")
     print(mejor)
     print("Tiene el siguiente numero de ataques:")
     print(mejorscore)
+    vectorevaluacionesac=np.array([[evaluacion,mejorscore]])
+    vectorevaluaciones=np.append(vectorevaluaciones,vectorevaluacionesac,axis=0)
 
 fin=time.time()
 print("El tiempo de ejecución fue:")
 print(fin-inicio)
-print(cuentanqueen(mejor))
+np.savetxt("nqueensmatriz30.csv",vectorevaluaciones,delimiter=",")
