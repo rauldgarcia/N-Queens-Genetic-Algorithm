@@ -168,6 +168,4 @@ while mejorscore>0 and evaluaciones<10000:
 fin=time.time()
 print("El tiempo de ejecución fue:")
 print(fin-inicio)
-print(vectorevaluaciones)
-
-np.savetxt("nqueensperms1.csv",vectorevaluaciones,delimiter=",")
+np.savetxt("nqueensperms30.csv",vectorevaluaciones,delimiter=",")
