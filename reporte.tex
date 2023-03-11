@@ -1,0 +1,136 @@
+% This is samplepaper.tex, a sample chapter demonstrating the
+% LLNCS macro package for Springer Computer Science proceedings;
+% Version 2.21 of 2022/01/12
+%
+\documentclass[runningheads]{llncs}
+%
+\usepackage[T1]{fontenc}
+% T1 fonts will be used to generate the final print and online PDFs,
+% so please use T1 fonts in your manuscript whenever possible.
+% Other font encondings may result in incorrect characters.
+%
+\usepackage{graphicx}
+% Used for displaying a sample figure. If possible, figure files should
+% be included in EPS format.
+%
+% If you use the hyperref package, please uncomment the following two lines
+% to display URLs in blue roman font according to Springer's eBook style:
+%\usepackage{color}
+%\renewcommand\UrlFont{\color{blue}\rmfamily}
+%
+\begin{document}
+%
+\title{Problema de N-Reinas}
+%
+%\titlerunning{Abbreviated paper title}
+% If the paper title is too long for the running head, you can set
+% an abbreviated paper title here
+%
+\author{Raúl Daniel García Ramón}
+%
+
+% First names are abbreviated in the running head.
+% If there are more than two authors, 'et al.' is used.
+%
+\institute{Instituto de Investigaciones en Inteligencia Artificial. Universidad Veracruzana.
+\email{rauld.garcia95@gmail.com}\\
+\email{zs22000520@estudiantes.uv.mx}\\
+}
+%
+\maketitle              % typeset the header of the contribution
+%
+\begin{abstract}
+El problema de las n-reinas, es un ejercicio clásico en el área de inteligencia artificial, el cual consiste en colocar n número de reinas en un tablero de ajedrez de nxn, con la limitación que no puede haber dos reinas atacándose entre sí, en otras palabras, no puede haber dos reinas en la misma columna, renglón o diagonal. En este texto se resuelve el problema mediante el uso de un algoritmo de cómputo evolutivo, usando dos representaciones diferentes, la primera en forma de matriz binaria y la segunda con permutaciones, además de tener diferentes mecanismos de cruza y muta en cada representación, así como de selección de padres y de reemplazo. Posteriormente, se realiza una comparativa estadística de treinta diferentes corridas del algoritmo para cada una de las representaciones, en la cual se obtiene como resultado que la representación con permutaciones encuentra la solución en menor número de evaluaciones y en mayor número de ocasiones.
+
+\keywords{Problema de las n-reinas \and Inteligencia Artificial \and Computo Evolutivo}
+\end{abstract}
+%
+%
+%
+\section{Introducción}
+Las n-reinas es el problema en el que se tienen que colocar n número de reinas en un tablero de ajedrez de $nxn$ sin que haya ataques entre ellas, de modo que no pueden compartir columna, renglón o diagonal. Para este problema existen soluciones para $n\geq4$, aunque puede volverse computacionalmente costoso si se trata de encontrar la solución buscando en cada una de las posibles colocaciones de las n reinas en el tablero, es por eso que con cómputo evolutivo se puede buscar una solución sin necesidad de revisar una a una cada posible solución.
+
+\section{Implementación}
+Para la primera representación se utilizó una matriz binaria de $8x8$, donde los ceros representan los cuadros vacíos y los unos los lugares donde se encuentran las reinas. El enfoque está basado en minimizar el número de ataques conforme se van obteniendo nuevas generaciones, para esto se genera una población inicial de cien matrices, las cuales se evalúan con una función que cuenta el número de ataques en cada tablero, esto se obtiene contando el total de reinas en cada fila, columna o diagonal, y si el valor para cada uno de estos es mayor que uno se suma hasta obtener el total de cada tablero, posteriormente se calcula el promedio de ataques de toda la población y se obtiene la probabilidad de cada matriz de ser seleccionada como padre con la función dummy con la siguiente fórmula $p(fi)=1- \frac{total de ataques de la matriz}{promedio+0.1}$ (el 0.1 es para evitar que el algoritmo cuando está a punto de convergir toda la población puede tener el mismo número de ataques por lo que la división da 1 y la probabilidad se vuelve 0 y el algoritmo se estanca sin poder escoger padres para cruzar). Posteriormente, se seleccionan a veinte padres mediante un volado sesgado basado en la probabilidad de cada matriz de ser seleccionada. Para la cruza se usa una probabilidad de $90\%$ y se obtiene un hijo dividiendo cada padre por su diagonal principal y quedando la parte de abajo de la diagonal del primer padre y la parte de arriba del segundo padre, la diagonal se divide en dos, conservando los primeros cuatro términos del primer padre y los últimos cuatro del otro (en caso de que queden reinas de más se eliminan aleatoriamente hasta quedar solo ocho, de manera similar se agregan en caso de tener reinas faltantes). A continuación, para la muta se usó una probabilidad de $100\%$, la cual consiste en aleatoriamente escoger un uno de la matriz, convertirlo en cero y escoger aleatoriamente un cero y convertirlo en uno. Después se evalúan a los hijos y se agregan con la población para ordenarlos del de menor ataques al de mayor y cortar a la población, eliminando a los peores. Finalmente, se repite el algoritmo hasta realizar diez mil evaluaciones o encontrar la solución que de cero ataques, lo que suceda primero.\\
+Para la segunda implementación se utilizó una representación mediante permutaciones, las cuales contienen los números del uno al ocho, donde cada número representa el renglón en el que se encuentra la reina y el índice de la permutación es la columna a la que pertenece, con esto se logra reducir el espacio de búsqueda, el algoritmo se inicia con una población de cien individuos, los cuales se evalúan para obtener el número de ataques de cada uno. Para la selección de padres se escogen cinco permutaciones de manera aleatoria y se eligen como padres los dos con menor número de ataques. La cruza se realiza el $100\%$ de las veces mediante el mecanismo de cortar y llenar cruzado, en caso de haber números repetidos al cruzar, en vez de colocar los repetidos se colocan los faltantes de manera aleatoria. Para la muta se usó una probabilidad de $80\%$, realizando mediante el intercambio de dos valores aleatorios de la permutación. Para el reemplazo, los dos hijos generados se intercambian por las dos peores soluciones de la población. Finalmente, el mecanismo de paro es el mismo que para la representación anterior.
+
+\begin{table}
+\caption{Table captions should be placed above the
+tables.}\label{tab1}
+\begin{tabular}{|l|l|l|}
+\hline
+Heading level &  Example & Font size and style\\
+\hline
+Title (centered) &  {\Large\bfseries Lecture Notes} & 14 point, bold\\
+1st-level heading &  {\large\bfseries 1 Introduction} & 12 point, bold\\
+2nd-level heading & {\bfseries 2.1 Printing Area} & 10 point, bold\\
+3rd-level heading & {\bfseries Run-in Heading in Bold.} Text follows & 10 point, bold\\
+4th-level heading & {\itshape Lowest Level Heading.} Text follows & 10 point, italic\\
+\hline
+\end{tabular}
+\end{table}
+
+
+\noindent Displayed equations are centered and set on a separate
+line.
+Please try to avoid rasterized images for line-art diagrams and
+schemas. Whenever possible, use vector graphics instead (see
+Fig.~\ref{fig1}).
+
+\begin{figure}
+\includegraphics[width=\textwidth]{fig1.eps}
+\caption{A figure caption is always placed below the illustration.
+Please note that short captions are centered, while long ones are
+justified by the macro package automatically.} \label{fig1}
+\end{figure}
+
+%
+% the environments 'definition', 'lemma', 'proposition', 'corollary',
+% 'remark', and 'example' are defined in the LLNCS documentclass as well.
+%
+
+For citations of references, we prefer the use of square brackets
+and consecutive numbers. Citations using labels or the author/year
+convention are also acceptable. The following bibliography provides
+a sample reference list with entries for journal
+articles~\cite{ref_article1}, an LNCS chapter~\cite{ref_lncs1}, a
+book~\cite{ref_book1}, proceedings without editors~\cite{ref_proc1},
+and a homepage~\cite{ref_url1}. Multiple citations are grouped
+\cite{ref_article1,ref_lncs1,ref_book1},
+\cite{ref_article1,ref_book1,ref_proc1,ref_url1}.
+
+\subsubsection{Acknowledgements} Please place your acknowledgments at
+the end of the paper, preceded by an unnumbered run-in heading (i.e.
+3rd-level heading).
+
+%
+% ---- Bibliography ----
+%
+% BibTeX users should specify bibliography style 'splncs04'.
+% References will then be sorted and formatted in the correct style.
+%
+% \bibliographystyle{splncs04}
+% \bibliography{mybibliography}
+%
+\begin{thebibliography}{8}
+\bibitem{ref_article1}
+Author, F.: Article title. Journal \textbf{2}(5), 99--110 (2016)
+
+\bibitem{ref_lncs1}
+Author, F., Author, S.: Title of a proceedings paper. In: Editor,
+F., Editor, S. (eds.) CONFERENCE 2016, LNCS, vol. 9999, pp. 1--13.
+Springer, Heidelberg (2016). \doi{10.10007/1234567890}
+
+\bibitem{ref_book1}
+Author, F., Author, S., Author, T.: Book title. 2nd edn. Publisher,
+Location (1999)
+
+\bibitem{ref_proc1}
+Author, A.-B.: Contribution title. In: 9th International Proceedings
+on Proceedings, pp. 1--2. Publisher, Location (2010)
+
+\bibitem{ref_url1}
+LNCS Homepage, \url{http://www.springer.com/lncs}. Last accessed 4
+Oct 2017
+\end{thebibliography}
+\end{document}
