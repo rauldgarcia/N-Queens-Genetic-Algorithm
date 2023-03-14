@@ -5,9 +5,9 @@ import time
 import copy
 inicio=time.time()
 
-nqueen=8 #se puede cambiar el numero de reinas (solo hay solución para n>=4)
-npoblacion=100 #se puede cambiar el numero de poblacion
-npadres=20 #se puede cambiar el numero de padres
+nqueen=8
+npoblacion=100 
+npadres=20 
 pcruza=0.9 #se puede cambiar porcentaje de cruza
 pmuta=1 #se puede cambiar
 iteraciones=10000
