@@ -4,13 +4,13 @@ import random
 import time
 inicio=time.time()
 
-nqueen=8 #se puede cambiar el numero de reinas (solo hay solución para n>=4)
-npoblacion=100 #se puede cambiar el numero de poblacion
-npadres=5 #se puede cambiar el numero de padres
+nqueen=8 
+npoblacion=100 
+npadres=5 
 npadresreal=2
 pcruza=1 #se puede cambiar porcentaje de cruza
 pmuta=0.8 #se puede cambiar
-iteraciones=2000
+iteraciones=10000
 
 #crea matrices aleatorias de n numeros de 1 
 def creaperm():
